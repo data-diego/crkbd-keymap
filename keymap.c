@@ -4,9 +4,9 @@
 // ============================================================
 //  Animation state
 // ============================================================
-static uint8_t anim_id      = 0;
+static uint8_t anim_id      = 2;
 static uint8_t last_anim_id = 0xFF;
-static uint8_t remote_anim  = 0;
+static uint8_t remote_anim  = 6;
 static uint8_t gru_frame    = 0;
 #define ANIM_COUNT 9
 
