@@ -266,14 +266,12 @@ static const uint8_t PROGMEM sine_lut[64] = {
     15,14,12,11, 9, 8, 6, 5, 4, 3, 2, 1, 1, 0, 0, 0,
      0, 0, 0, 1, 1, 2, 3, 4, 5, 6, 8, 9,11,12,14,15
 };
-static uint8_t wave_phase = 0;
-
 static void anim_sine_wave(void) {
     oled_clear();
     for (uint8_t x = 0; x < 128; x++) {
-        uint8_t y2r = pgm_read_byte(&sine_lut[((x*2) + wave_phase*3) & 63]);
+        uint8_t y2r = pgm_read_byte(&sine_lut[((x*2) + gru_frame*3) & 63]);
         uint8_t y2 = 4 + ((y2r * 3) >> 2);
-        uint8_t y3r = pgm_read_byte(&sine_lut[((x*3) + wave_phase*2) & 63]);
+        uint8_t y3r = pgm_read_byte(&sine_lut[((x*3) + gru_frame*2) & 63]);
         uint8_t y3 = 8 + (y3r >> 1);
         if (y2 > 0)  oled_write_pixel(x, y2-1, true);
         oled_write_pixel(x, y2, true);
@@ -282,7 +280,6 @@ static void anim_sine_wave(void) {
         if (y3 < 31) oled_write_pixel(x, y3+1, true);
     }
     for (uint8_t x = 0; x < 128; x += 4) oled_write_pixel(x, 16, true);
-    wave_phase++;
 }
 
 // ============================================================
@@ -891,7 +888,6 @@ static void render_animation(void) {
     if (anim_id != last_anim_id) {
         oled_clear();
         ball_reset();
-        wave_phase = 0;
         nyan_frame = 0;
         bongo_frame = 0;
         ocean_phase = 0;
