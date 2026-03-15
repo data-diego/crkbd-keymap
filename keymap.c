@@ -8,7 +8,7 @@ static uint8_t anim_id      = 2;
 static uint8_t last_anim_id = 0xFF;
 static uint8_t remote_anim  = 6;
 static uint8_t gru_frame    = 0;
-#define ANIM_COUNT 9
+#define ANIM_COUNT 10
 
 static uint32_t anim_timer = 0;
 static uint16_t last_keypress_time = 0;
@@ -862,6 +862,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                 case KC_J: anim_id = 6; return false;
                 case KC_K: anim_id = 7; return false;
                 case KC_L: anim_id = 8; return false;
+                case KC_SCLN: anim_id = 9; return false;
                 case KC_Z: remote_anim = 0; return false;
                 case KC_X: remote_anim = 1; return false;
                 case KC_C: remote_anim = 2; return false;
@@ -871,6 +872,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                 case KC_M: remote_anim = 6; return false;
                 case KC_COMM: remote_anim = 7; return false;
                 case KC_DOT: remote_anim = 8; return false;
+                case KC_SLSH: remote_anim = 9; return false;
             }
         }
     }
@@ -907,10 +909,17 @@ static void render_animation(void) {
         case 6: anim_ocean_dream();    break;
         case 7: anim_crab();           break;
         case 8: anim_palm_tree();      break;
+        case 9: oled_clear();             break;
     }
 }
 
 bool oled_task_user(void) {
+    if (anim_id == 9) {
+        if (anim_id != last_anim_id) { oled_clear(); last_anim_id = anim_id; }
+        oled_off();
+        return false;
+    }
+    oled_on();
     uint16_t ms = (anim_id == 0 || anim_id >= 6) ? ANIM_FRAME_SLOW : ANIM_FRAME_FAST;
     if (timer_elapsed(anim_timer) > ms) {
         anim_timer = timer_read();
