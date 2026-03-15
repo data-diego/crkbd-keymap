@@ -309,7 +309,8 @@ static void anim_gru(void) {
     oled_clear();
     uint8_t speed = (timer_elapsed(last_keypress_time) < 300) ? 3 : 1;
     gru_pos += speed;
-    uint8_t t = gru_pos % 190;  // triangle wave period
+    if (gru_pos >= 190) gru_pos -= 190;
+    uint8_t t = gru_pos;
     uint8_t x = (t < 95) ? t : 190 - t;
     draw_icon_P(gru_bitmap, x, 0, GRU_W, GRU_H);
 }
