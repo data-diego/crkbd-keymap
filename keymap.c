@@ -304,10 +304,12 @@ static const char PROGMEM gru_bitmap[] = {
     0x03, 0x01, 0x00, 0x00,
 };
 
+static uint8_t gru_pos = 0;
 static void anim_gru(void) {
     oled_clear();
-    // Smooth 64-step sine oscillation across full width
-    uint8_t s = pgm_read_byte(&sine_lut[gru_frame & 63]);  // 0..31
+    uint8_t speed = (timer_elapsed(last_keypress_time) < 300) ? 3 : 1;
+    gru_pos += speed;
+    uint8_t s = pgm_read_byte(&sine_lut[gru_pos & 63]);  // 0..31
     uint8_t x = (uint8_t)((uint16_t)s * (128 - GRU_W) / 31);
     draw_icon_P(gru_bitmap, x, 0, GRU_W, GRU_H);
 }
